@@ -2,12 +2,8 @@ package com.example.news.controllers;
 
 import com.example.news.entity.Source;
 import com.example.news.service.SourceService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/source")
@@ -19,13 +15,14 @@ public class SourceController {
         this.sourceService = sourceService;
     }
 
-    @GetMapping("/get{id}")
+    @GetMapping("/{id}")
     public Source getSource(@PathVariable Long id){
         return sourceService.getSource(id);
     }
 
     @GetMapping("/getall")
-    public List<Source> getAll(){
-        return sourceService.getAll();
+    public Page<Source> getAll(@RequestParam(value = "limit", defaultValue = "10") Integer limit,
+                               @RequestParam(value = "page", defaultValue = "0") Integer page){
+        return sourceService.getAll(page, limit);
     }
 }

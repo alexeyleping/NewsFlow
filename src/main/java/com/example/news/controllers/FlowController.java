@@ -19,16 +19,9 @@ public class FlowController {
         return flowService.getFlow(id);
     }
 
-    @GetMapping("/getall")
-    public Page<Flow> getAll(@RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                             @RequestParam(value = "page", defaultValue = "0") Integer page){
-        return flowService.getAll(limit, page);
-    }
-
     @GetMapping
     public Page<Flow> getFlowByParams(@RequestParam(required = false) Long source, @RequestParam(required = false) Long subjectMatter, @RequestParam(value = "limit", defaultValue = "10") Integer limit,
                                       @RequestParam(value = "page", defaultValue = "0") Integer page){
             return flowService.getFlowAnyParams(source, subjectMatter, limit, page);
     }
-
 }
