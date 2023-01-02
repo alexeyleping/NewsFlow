@@ -18,17 +18,17 @@ public class Flow {
     private Source source;
 
     @OneToOne
-    @JoinColumn(name = "subjectmatter_id", referencedColumnName = "id")
-    private SubjectMatter subjectMatter;
+    @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    private Subject subject;
 
     public Flow() {
     }
 
-    public Flow(Long id, String textFlow, Source source, SubjectMatter subjectMatter) {
+    public Flow(Long id, String textFlow, Source source, Subject subject) {
         this.id = id;
         this.textFlow = textFlow;
         this.source = source;
-        this.subjectMatter = subjectMatter;
+        this.subject = subject;
     }
 
     public Long getId() {
@@ -55,11 +55,11 @@ public class Flow {
         this.source = source;
     }
 
-    public SubjectMatter getSubjectMatter() {
-        return subjectMatter;
+    public Subject getSubjectMatter() {
+        return subject;
     }
 
-    public void setSubjectMatter(SubjectMatter subjectMatter) {
-        this.subjectMatter = subjectMatter;
+    public void setSubjectMatter(Subject subject) {
+        this.subject = subject;
     }
 }

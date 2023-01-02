@@ -3,8 +3,8 @@ package com.example.news.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "subjectmatter")
-public class SubjectMatter {
+@Table(name = "subject")
+public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -13,10 +13,10 @@ public class SubjectMatter {
     @Column(name = "name")
     private String name;
 
-    public SubjectMatter() {
+    public Subject() {
     }
 
-    public SubjectMatter(Long id, String name) {
+    public Subject(Long id, String name) {
         this.id = id;
         this.name = name;
     }

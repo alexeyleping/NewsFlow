@@ -20,7 +20,7 @@ public class SourceController {
         return sourceService.getSource(id);
     }
 
-    @GetMapping("/getall")
+    @GetMapping("/")
     public Page<Source> getAll(@RequestParam(value = "limit", defaultValue = "10") Integer limit,
                                @RequestParam(value = "page", defaultValue = "0") Integer page){
         return sourceService.getAll(page, limit);

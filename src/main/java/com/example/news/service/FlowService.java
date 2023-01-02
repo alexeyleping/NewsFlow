@@ -21,10 +21,6 @@ public class FlowService {
         return flowRepository.getReferenceById(id);
     }
 
-    public Page<Flow> getAll(Integer limit, Integer page){
-        return flowRepository.findAll(PageRequest.of(page, limit));
-    }
-
     public Page<Flow> getFlowAnyParams(Long source, Long subjectMatter, Integer limit, Integer page){
         Pageable pageable = PageRequest.of(page, limit);
         return flowRepository.findAllBySourceIdOrSubjectMatterId(source, subjectMatter, pageable);
