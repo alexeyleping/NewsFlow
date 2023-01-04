@@ -14,6 +14,6 @@ create table news.flow
     id bigint primary key,
     textflow text,
     source_id bigint REFERENCES source (id),
-    subjectmatter_id bigint REFERENCES subject (id)
+    subject_id bigint REFERENCES subject (id)
 );
 
