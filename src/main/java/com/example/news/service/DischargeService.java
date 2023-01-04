@@ -2,7 +2,6 @@ package com.example.news.service;
 
 import com.example.news.entity.Flow;
 import com.example.news.entity.Source;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +25,7 @@ public class DischargeService {
         this.subjectService = subjectService;
     }
 
-    @Scheduled(cron = "$interval-in-cron")
-    @Async
+    @Scheduled(cron = "${interval-in-cron}")
     public void getQuantitySource() throws IOException {
         List<Source> listSource = sourceService.getAll();
         Set<Source> setSource = new HashSet<>(listSource);
@@ -61,8 +59,9 @@ public class DischargeService {
                 String[] headerRecord = {s.getName()};
                 csvWriter.writeNext(headerRecord);
                 for (var entry : mapCountSubject.entrySet()){
-                    String[] str = {entry.getKey() + " - " + String.valueOf(entry.getValue())};
-                    csvWriter.writeNext(str);
+                    List<String[]> str = new ArrayList<>();
+                    str.add(new String[] {entry.getKey(), String.valueOf(entry.getValue())});
+                    csvWriter.writeAll(str);
                 }
             }
             System.out.println(mapCountSubject);
