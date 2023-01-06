@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface FlowRepository extends JpaRepository<Flow, Long> {
     Page<Flow> findAllBySourceIdOrSubjectId(Long source, Long subjectMatter, Pageable pageable);
-    Long countFlowBySourceId(Long source);
     List<Flow> findAllBySourceId(Long id);
 
 

@@ -18,13 +18,11 @@ import java.util.concurrent.Executors;
 public class DischargeService {
     private final SourceService sourceService;
     private final FlowService flowService;
-    private final SubjectService subjectService;
 
     ExecutorService threadPool = Executors.newFixedThreadPool(8);
-    public DischargeService(SourceService sourceService, FlowService flowService, SubjectService subjectService) {
+    public DischargeService(SourceService sourceService, FlowService flowService) {
         this.sourceService = sourceService;
         this.flowService = flowService;
-        this.subjectService = subjectService;
     }
 
     @Scheduled(cron = "${interval-in-cron}")
@@ -82,5 +80,4 @@ public class DischargeService {
             throw new RuntimeException(e);
         }
     }
-
 }

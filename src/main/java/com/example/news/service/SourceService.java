@@ -31,6 +31,4 @@ public class SourceService {
     public List<Source> getAll(){
         return sourceRepository.findAll();
     }
-
-
 }

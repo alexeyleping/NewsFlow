@@ -9,11 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 public class NewsApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(NewsApplication.class, args);
-
     }
-
-
 }
