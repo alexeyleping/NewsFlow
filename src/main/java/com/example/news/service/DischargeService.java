@@ -2,16 +2,17 @@ package com.example.news.service;
 
 import com.example.news.entity.Flow;
 import com.example.news.entity.Source;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import com.opencsv.CSVWriter;
-
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class DischargeService {
@@ -19,6 +20,7 @@ public class DischargeService {
     private final FlowService flowService;
     private final SubjectService subjectService;
 
+    ExecutorService threadPool = Executors.newFixedThreadPool(8);
     public DischargeService(SourceService sourceService, FlowService flowService, SubjectService subjectService) {
         this.sourceService = sourceService;
         this.flowService = flowService;
@@ -26,45 +28,59 @@ public class DischargeService {
     }
 
     @Scheduled(cron = "${interval-in-cron}")
-    public void getQuantitySource() throws IOException {
+    @Async
+    public void getQuantitySource(){
         List<Source> listSource = sourceService.getAll();
         Set<Source> setSource = new HashSet<>(listSource);
         for (Source s : setSource) {
-            List<Flow> flowList = flowService.findAllBySourceId(s.getId());
-            Map<String, Integer> mapCountSubject = new HashMap<>();
-            for (Flow f : flowList
-            ) {
-                if (!mapCountSubject.containsKey(f.getSubject())) {
-                    mapCountSubject.put(f.getSubject().getName(), 0);
+            threadPool.execute(() -> doFlow(s.getId(), s.getName()));
+    }
+    }
+
+
+    public Runnable doFlow(Long idSource, String nameSource){
+        List<Flow> flowList = flowService.findAllBySourceId(idSource);
+        Map<String, Integer> mapCountSubject = new HashMap<>();
+        for (Flow f : flowList
+        ) {
+            if (!mapCountSubject.containsKey(f.getSubject())) {
+                mapCountSubject.put(f.getSubject().getName(), 0);
+            }
+        }
+        for (var entry : mapCountSubject.entrySet()) {
+            int i = 0;
+            for (Flow f : flowList) {
+                if (Objects.equals(f.getSubject().getName(), entry.getKey())) {
+                    i++;
+                    entry.setValue(i);
                 }
             }
-            for (var entry : mapCountSubject.entrySet()) {
-                int i = 0;
-                for (Flow f : flowList) {
-                    if (Objects.equals(f.getSubject().getName(), entry.getKey())) {
-                        i++;
-                        entry.setValue(i);
-                    }
-                }
-            }
-            try (
-                Writer writer = Files.newBufferedWriter(Paths.get(s.getName()));
+        }
+        doTask(nameSource, mapCountSubject);
+        System.out.println(mapCountSubject);
+        return null;
+    }
+
+    public void doTask(String nameFile, Map<String, Integer> mapCountSubject){
+        try (
+                Writer writer = Files.newBufferedWriter(Paths.get(nameFile));
                 CSVWriter csvWriter = new CSVWriter(writer,
                         CSVWriter.DEFAULT_SEPARATOR,
                         CSVWriter.NO_QUOTE_CHARACTER,
                         CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                         CSVWriter.DEFAULT_LINE_END);
-            )
-            {
-                String[] headerRecord = {s.getName()};
-                csvWriter.writeNext(headerRecord);
-                for (var entry : mapCountSubject.entrySet()){
-                    List<String[]> str = new ArrayList<>();
-                    str.add(new String[] {entry.getKey(), String.valueOf(entry.getValue())});
-                    csvWriter.writeAll(str);
-                }
+        )
+        {
+            String[] headerRecord = {nameFile};
+            csvWriter.writeNext(headerRecord);
+            for (var entry : mapCountSubject.entrySet()){
+                List<String[]> str = new ArrayList<>();
+                str.add(new String[] {entry.getKey(), String.valueOf(entry.getValue())});
+                csvWriter.writeAll(str);
             }
-            System.out.println(mapCountSubject);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
+
 }
