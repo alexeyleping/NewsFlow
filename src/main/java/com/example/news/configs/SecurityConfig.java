@@ -22,7 +22,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.addFilterAt(tokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests()
+                .authorizeRequests()
                 .requestMatchers("/v3/api-docs/**", "/configuration/**", "/swagger*/**", "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
