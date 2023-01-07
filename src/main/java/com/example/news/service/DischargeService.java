@@ -25,7 +25,7 @@ public class DischargeService {
         this.flowService = flowService;
     }
 
-    @Scheduled(cron = "${interval-in-cron}")
+    @Scheduled(cron = "${upload.interval.cron}")
     @Async
     public void getQuantitySource(){
         List<Source> listSource = sourceService.getAll();
@@ -55,7 +55,6 @@ public class DischargeService {
             }
         }
         doTask(nameSource, mapCountSubject);
-        System.out.println(mapCountSubject);
         return null;
     }
 

@@ -1,15 +1,14 @@
-create schema news;
-create table news.source
+create table source
     (
     id bigint primary key,
     name text
     );
-create table news.subject
+create table subject
 (
     id bigint primary key,
     name text
 );
-create table news.flow
+create table flow
 (
     id bigint primary key,
     textflow text,

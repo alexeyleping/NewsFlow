@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/subjectmatter")
+@RequestMapping("/subject")
 public class SubjectController {
     private final SubjectService subjectService;
 
@@ -19,7 +19,7 @@ public class SubjectController {
         return subjectService.getSubjectMatter(id);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public Page<Subject> getAll(@RequestParam(value = "limit", defaultValue = "10") Integer limit,
                                 @RequestParam(value = "page", defaultValue = "0") Integer page){
         return subjectService.getAll(page, limit);
