@@ -12,6 +12,4 @@ import java.util.List;
 public interface FlowRepository extends JpaRepository<Flow, Long> {
     Page<Flow> findAllBySourceIdOrSubjectId(Long source, Long subjectMatter, Pageable pageable);
     List<Flow> findAllBySourceId(Long id);
-
-
 }
