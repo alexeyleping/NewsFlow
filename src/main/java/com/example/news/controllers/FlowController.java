@@ -23,8 +23,7 @@ public class FlowController {
     public Page<Flow> getFlowByParams(@RequestParam(required = false) Long source,
                                       @RequestParam(required = false) Long subjectMatter,
                                       @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                                      @RequestParam(value = "page", defaultValue = "0") Integer page)
-    {
-            return flowService.getFlowAnyParams(source, subjectMatter, limit, page);
+                                      @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return flowService.getFlowAnyParams(source, subjectMatter, limit, page);
     }
 }

@@ -2,7 +2,6 @@ package com.example.news.service;
 
 import com.example.news.entity.Flow;
 import com.example.news.entity.Source;
-import com.example.news.filters.TokenFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.*;
 import com.opencsv.CSVWriter;
 import java.io.IOException;
@@ -20,7 +18,7 @@ import java.util.concurrent.Executors;
 
 @Service
 public class DischargeService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokenFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DischargeService.class);
     private final SourceService sourceService;
     private final FlowService flowService;
 
@@ -33,11 +31,11 @@ public class DischargeService {
     @Scheduled(cron = "${upload.interval.cron}")
     @Async
     public void getQuantitySource(){
-        LOGGER.info("Начинаем выгрузку CSV... " + LocalDateTime.now());
+        LOGGER.info("Начинаем выгрузку CSV...");
         List<Source> listSource = sourceService.getAll();
         Set<Source> setSource = new HashSet<>(listSource);
         for (Source s : setSource) {
-            LOGGER.info("Начинаем выгрузку для источника " + s.getName() + " " + LocalDateTime.now());
+            LOGGER.info("Начинаем выгрузку для источника " + s.getName());
             threadPool.execute(() -> doFlow(s.getId(), s.getName()));
     }
     }
@@ -62,7 +60,7 @@ public class DischargeService {
             }
         }
         doTask(nameSource, mapCountSubject);
-        LOGGER.info("Закончили выгрузку " + LocalDateTime.now());
+        LOGGER.info("Закончили выгрузку!");
         return null;
     }
 
