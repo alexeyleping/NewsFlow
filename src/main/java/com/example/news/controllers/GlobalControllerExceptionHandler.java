@@ -13,8 +13,8 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
     @ExceptionHandler(value = { Exception.class })
     public ResponseEntity<String> handle(HttpServletRequest request, Exception exception) {
-        LOGGER.error(String.format("INTERNAL_SERVER_ERROR", request.getRequestURI(), request.getParameterMap()), exception);
+        LOGGER.error(String.format("INTERNAL_SERVER_ERROR, %s, params: %s", request.getRequestURI(), request.getParameterMap()), exception);
         return ResponseEntity.internalServerError()
-                .body(String.format("Некорректный запрос, попробуйте по другому!", exception.getMessage()));
+                .body(String.format("Некорректный запрос, попробуйте по другому! %s", exception.getMessage()));
     }
 }

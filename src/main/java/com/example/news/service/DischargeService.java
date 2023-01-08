@@ -15,6 +15,8 @@ import com.opencsv.CSVWriter;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class DischargeService {
@@ -39,32 +41,17 @@ public class DischargeService {
             threadPool.execute(() -> doFlow(s.getId(), s.getName()));
     }
     }
-
-
     public Runnable doFlow(Long idSource, String nameSource){
         List<Flow> flowList = flowService.findAllBySourceId(idSource);
-        Map<String, Integer> mapCountSubject = new HashMap<>();
-        for (Flow f : flowList
-        ) {
-            if (!mapCountSubject.containsKey(f.getSubject())) {
-                mapCountSubject.put(f.getSubject().getName(), 0);
-            }
-        }
-        for (var entry : mapCountSubject.entrySet()) {
-            int i = 0;
-            for (Flow f : flowList) {
-                if (Objects.equals(f.getSubject().getName(), entry.getKey())) {
-                    i++;
-                    entry.setValue(i);
-                }
-            }
-        }
+        Map<String, Long> mapCountSubject = flowList.stream()
+                .map(n -> n.getSubject().getName())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         doTask(nameSource, mapCountSubject);
         LOGGER.info("Закончили выгрузку!");
         return null;
     }
 
-    public void doTask(String nameFile, Map<String, Integer> mapCountSubject){
+    public void doTask(String nameFile, Map<String, Long> mapCountSubject){
         try (
                 Writer writer = Files.newBufferedWriter(Paths.get(nameFile));
                 CSVWriter csvWriter = new CSVWriter(writer,
