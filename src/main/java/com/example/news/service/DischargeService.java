@@ -31,7 +31,6 @@ public class DischargeService {
     }
 
     @Scheduled(cron = "${upload.interval.cron}")
-    @Async
     public void getQuantitySource(){
         LOGGER.info("Начинаем выгрузку CSV...");
         List<Source> listSource = sourceService.getAll();
